@@ -1,0 +1,6 @@
+{
+  "name": "Data Penduduk RT-RW",
+  "description": "Aplikasi pengelolaan data kependudukan tingkat RT, RW, dan Kepala Wilayah dengan fitur lansia, disabilitas, mutasi kelahiran/kematian, notifikasi, pelaporan lengkap, log aktivitas, backup database, dan notifikasi WhatsApp.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

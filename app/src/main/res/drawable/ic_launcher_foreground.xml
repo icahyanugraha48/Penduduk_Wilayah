@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Glowing circular frame in the background indicating security and focus -->
+    <path
+        android:fillColor="#15FFFFFF"
+        android:pathData="M54,54m-33,0a33,33 0,1 1,66 0a33,33 0,1 1,-66 0"
+        android:strokeWidth="1"
+        android:strokeColor="#25FFFFFF" />
+
+    <!-- 1. The stylized 'Family Registration Card' background sheet -->
+    <path
+        android:fillColor="#E0F2F1"
+        android:pathData="M28,34 H80 A4,4 0,0 1 84,38 V74 A4,4 0,0 1 80,78 H28 A4,4 0,0 1 24,74 V38 A4,4 0,0 1 28,34 Z"
+        android:strokeWidth="0.8"
+        android:strokeColor="#FFFFFF" />
+
+    <!-- Tech/data layout lines on the card -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M32,44 H76 M32,50 H64 M32,56 H54 M32,62 H44 M68,62 H76"
+        android:strokeWidth="1.5"
+        android:strokeColor="#B0BEC5"
+        android:strokeLineCap="round" />
+
+    <!-- 2. The stylized Modern House shape in the foreground overlapping the registration card -->
+    <path
+        android:pathData="M54,23 L22,48 H30 V82 H78 V48 H86 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="54"
+                android:startY="23"
+                android:endX="54"
+                android:endY="82"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#00E5FF" /> <!-- Electric Cyan -->
+                <item android:offset="1.0" android:color="#006064" /> <!-- Deep Teal -->
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- High-contrast crisp border guidelines -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M30,48 L54,30 L78,48"
+        android:strokeWidth="1.5"
+        android:strokeColor="#FFFFFF" />
+
+    <!-- 3. Dynamic Family Member Silhouettes inside the house, standing out in pure solid White -->
+    <!-- Father figure -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M43,53m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M36,68 C36,60 45,60 45,68 Z" />
+
+    <!-- Mother figure -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,50m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M48,65 C48,57 58,57 58,65 Z" />
+
+    <!-- Child figure -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M64,56m-2.2,0a2.2,2.2 0,1 1,4.4 0a2.2,2.2 0,1 1,-4.4 0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M59,71 C59,64 68,64 68,71 Z" />
+
+    <!-- Green check badge indicating verified population status -->
+    <path
+        android:fillColor="#00E676"
+        android:pathData="M70,68m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M68.5,68 L69.5,69 L72,66.5"
+        android:strokeWidth="1"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+</vector>
