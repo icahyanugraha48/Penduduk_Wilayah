@@ -26,6 +26,8 @@ import com.example.ui.screens.*
 import com.example.ui.theme.MyApplicationTheme
 import com.example.ui.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -275,33 +277,51 @@ fun AppShell(viewModel: MainViewModel) {
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                when (currentScreen) {
-                    "dashboard" -> DashboardScreen(
-                        viewModel = viewModel,
-                        onNavigateToWarga = { filter ->
-                            initialWargaFilter = filter
-                            currentScreen = "warga"
-                        },
-                        onNavigateToMutasi = { currentScreen = "mutasi" },
-                        onNavigateToPelaporan = { currentScreen = "pelaporan" },
-                        onNavigateToPengumuman = { currentScreen = "pengumuman" }
-                    )
-                    "warga" -> WargaScreen(
-                        viewModel = viewModel,
-                        initialFilter = initialWargaFilter
-                    )
-                    "mutasi" -> MutasiScreen(
-                        viewModel = viewModel
-                    )
-                    "pelaporan" -> PelaporanScreen(
-                        viewModel = viewModel
-                    )
-                    "pengumuman" -> PengumumanScreen(
-                        viewModel = viewModel
-                    )
-                    "pengaturan" -> PengaturanScreen(
-                        viewModel = viewModel
-                    )
+                AnimatedContent(
+                    targetState = currentScreen,
+                    transitionSpec = {
+                        (slideInHorizontally(
+                            animationSpec = tween(300),
+                            initialOffsetX = { width -> width / 12 }
+                        ) + fadeIn(animationSpec = tween(300)))
+                        .togetherWith(
+                            slideOutHorizontally(
+                                animationSpec = tween(250),
+                                targetOffsetX = { width -> -width / 12 }
+                            ) + fadeOut(animationSpec = tween(250))
+                        )
+                    },
+                    label = "screen_transition",
+                    modifier = Modifier.fillMaxSize()
+                ) { targetScreen ->
+                    when (targetScreen) {
+                        "dashboard" -> DashboardScreen(
+                            viewModel = viewModel,
+                            onNavigateToWarga = { filter ->
+                                initialWargaFilter = filter
+                                currentScreen = "warga"
+                            },
+                            onNavigateToMutasi = { currentScreen = "mutasi" },
+                            onNavigateToPelaporan = { currentScreen = "pelaporan" },
+                            onNavigateToPengumuman = { currentScreen = "pengumuman" }
+                        )
+                        "warga" -> WargaScreen(
+                            viewModel = viewModel,
+                            initialFilter = initialWargaFilter
+                        )
+                        "mutasi" -> MutasiScreen(
+                            viewModel = viewModel
+                        )
+                        "pelaporan" -> PelaporanScreen(
+                            viewModel = viewModel
+                        )
+                        "pengumuman" -> PengumumanScreen(
+                            viewModel = viewModel
+                        )
+                        "pengaturan" -> PengaturanScreen(
+                            viewModel = viewModel
+                        )
+                    }
                 }
             }
         }

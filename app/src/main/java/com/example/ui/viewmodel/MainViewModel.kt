@@ -346,11 +346,40 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
             if (id == 0) {
                 repository.insertWarga(warga)
-                repository.insertLog(user?.username ?: "system", user?.role ?: "System", "Menambahkan data warga baru: $nama (RT $rt/RW $rw)")
+                val logDetail = "Menambahkan warga baru: $nama (NIK: $nik, KK: $noKk, Jk: $gender, RT/RW: $rt/$rw, Umur: $umur Thn)"
+                repository.insertLog(user?.username ?: "system", user?.role ?: "System", logDetail)
                 addNotification("Pembaruan Data", "Warga baru bernama $nama berhasil terdaftar di RT $rt")
             } else {
+                val oldWarga = repository.getWargaById(id)
+                val changeDetails = mutableListOf<String>()
+                if (oldWarga != null) {
+                    if (oldWarga.nama != nama) changeDetails.add("Nama: '${oldWarga.nama}' -> '$nama'")
+                    if (oldWarga.nik != nik) changeDetails.add("NIK: '${oldWarga.nik}' -> '$nik'")
+                    if (oldWarga.noKk != noKk) changeDetails.add("No KK: '${oldWarga.noKk}' -> '$noKk'")
+                    if (oldWarga.gender != gender) changeDetails.add("Gender: '${oldWarga.gender}' -> '$gender'")
+                    if (oldWarga.tanggalLahir != tanggalLahir) changeDetails.add("Tgl Lahir: '${oldWarga.tanggalLahir}' -> '$tanggalLahir'")
+                    if (oldWarga.rt != rt) changeDetails.add("RT: '${oldWarga.rt}' -> '$rt'")
+                    if (oldWarga.rw != rw) changeDetails.add("RW: '${oldWarga.rw}' -> '$rw'")
+                    if (oldWarga.umur != umur) changeDetails.add("Umur: ${oldWarga.umur} -> $umur")
+                    if (oldWarga.isDisabilitas != isDisabilitas) changeDetails.add("Disabilitas: ${oldWarga.isDisabilitas} -> $isDisabilitas")
+                    if (oldWarga.jenisDisabilitas != jenisDisabilitas) changeDetails.add("Jenis Disabilitas: '${oldWarga.jenisDisabilitas}' -> '$jenisDisabilitas'")
+                    if (oldWarga.status != status) changeDetails.add("Status: '${oldWarga.status}' -> '$status'")
+                    if (oldWarga.tempatLahir != tempatLahir) changeDetails.add("Tempat Lahir: '${oldWarga.tempatLahir}' -> '$tempatLahir'")
+                    if (oldWarga.agama != agama) changeDetails.add("Agama: '${oldWarga.agama}' -> '$agama'")
+                    if (oldWarga.statusPerkawinan != statusPerkawinan) changeDetails.add("Status Perkawinan: '${oldWarga.statusPerkawinan}' -> '$statusPerkawinan'")
+                    if (oldWarga.pekerjaan != pekerjaan) changeDetails.add("Pekerjaan: '${oldWarga.pekerjaan}' -> '$pekerjaan'")
+                    if (oldWarga.kewarganegaraan != kewarganegaraan) changeDetails.add("Kewarganegaraan: '${oldWarga.kewarganegaraan}' -> '$kewarganegaraan'")
+                    if (oldWarga.pendidikan != pendidikan) changeDetails.add("Pendidikan: '${oldWarga.pendidikan}' -> '$pendidikan'")
+                    if (oldWarga.golonganDarah != golonganDarah) changeDetails.add("Golongan Darah: '${oldWarga.golonganDarah}' -> '$golonganDarah'")
+                    if (oldWarga.hubunganKeluarga != hubunganKeluarga) changeDetails.add("Hubungan Keluarga: '${oldWarga.hubunganKeluarga}' -> '$hubunganKeluarga'")
+                    if (oldWarga.bantuanList != bantuanList) changeDetails.add("Bantuan: '${oldWarga.bantuanList}' -> '$bantuanList'")
+                }
+
                 repository.updateWarga(warga)
-                repository.insertLog(user?.username ?: "system", user?.role ?: "System", "Mengubah data warga: $nama (RT $rt/RW $rw)")
+
+                val detailsStr = if (changeDetails.isNotEmpty()) changeDetails.joinToString(", ") else "Tidak ada perubahan nilai"
+                val logDetail = "Mengubah data warga: $nama (NIK: $nik). Perubahan: [$detailsStr]"
+                repository.insertLog(user?.username ?: "system", user?.role ?: "System", logDetail)
                 addNotification("Pembaruan Data", "Data warga $nama berhasil diubah")
             }
 
@@ -363,7 +392,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteWarga(warga)
             val user = _currentUser.value
-            repository.insertLog(user?.username ?: "system", user?.role ?: "System", "Menghapus data warga: ${warga.nama}")
+            val logDetail = "Menghapus data warga secara permanen: ${warga.nama} (NIK: ${warga.nik}, KK: ${warga.noKk}, RT/RW: ${warga.rt}/${warga.rw})"
+            repository.insertLog(user?.username ?: "system", user?.role ?: "System", logDetail)
             addNotification("Penghapusan Data", "Data warga ${warga.nama} telah dihapus dari sistem")
             _operationStatus.emit("Data warga berhasil dihapus!")
         }
@@ -391,10 +421,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             repository.insertMutasi(mutasi)
             
             // 3. Log
+            val logDetail = "Mencatat warga meninggal dunia & menonaktifkan data warga: ${warga.nama} (NIK: ${warga.nik}, KK: ${warga.noKk}, RT/RW: ${warga.rt}/${warga.rw}). Keterangan Kematian: $keterangan"
             repository.insertLog(
                 user?.username ?: "system",
                 user?.role ?: "RT/RW",
-                "Mencatat warga meninggal dunia: ${warga.nama} (NIK: ${warga.nik})"
+                logDetail
             )
             
             // 4. Send notification
@@ -418,6 +449,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         keterangan: String,
         rt: String = "",
         rw: String = "",
+        gender: String = "Laki-laki",
         onCompleted: () -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -464,7 +496,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     nama = namaWarga,
                     nik = nik.ifEmpty { "BABY-" + System.currentTimeMillis().toString().takeLast(8) },
                     noKk = noKk,
-                    gender = "Laki-laki", // default standard
+                    gender = gender,
                     tanggalLahir = tanggal,
                     rt = userRt,
                     rw = userRw,
@@ -476,7 +508,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 repository.insertWarga(babyWarga)
                 addNotification(
                     "Mutasi Real-time: Kelahiran",
-                    "Kelahiran Bayi $namaWarga berhasil dicatat dan didaftarkan otomatis ke RT $userRt"
+                    "Kelahiran Bayi $namaWarga ($gender) berhasil dicatat dan didaftarkan otomatis ke RT $userRt"
                 )
             } else if (tipe == "Pindah Keluar") {
                 val match = wargaList.value.find { it.nik == nik }

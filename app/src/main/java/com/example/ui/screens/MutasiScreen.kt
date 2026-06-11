@@ -413,6 +413,7 @@ fun MutasiFormDialog(
     val wargaList by viewModel.filteredWargaList.collectAsState()
 
     var namaWarga by remember { mutableStateOf("") }
+    var gender by remember { mutableStateOf("Laki-laki") }
     var nik by remember { mutableStateOf("") }
     var noKk by remember { mutableStateOf("") }
     var tanggal by remember { mutableStateOf(SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())) }
@@ -528,6 +529,25 @@ fun MutasiFormDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
 
+                if (tipe == "Kelahiran") {
+                    Column {
+                        Text("Jenis Kelamin Bayi", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                RadioButton(selected = gender == "Laki-laki", onClick = { gender = "Laki-laki" })
+                                Text("Laki-laki", style = MaterialTheme.typography.bodyMedium)
+                            }
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                RadioButton(selected = gender == "Perempuan", onClick = { gender = "Perempuan" })
+                                Text("Perempuan", style = MaterialTheme.typography.bodyMedium)
+                            }
+                        }
+                    }
+                }
+
                 if (tipe == "Kematian") {
                     OutlinedTextField(
                         value = nik,
@@ -608,6 +628,7 @@ fun MutasiFormDialog(
                             keterangan = keterangan,
                             rt = selectedParentRt,
                             rw = selectedParentRw,
+                            gender = if (tipe == "Kelahiran") gender else "Laki-laki",
                             onCompleted = onDismiss
                         )
                     }
